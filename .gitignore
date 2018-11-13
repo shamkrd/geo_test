@@ -1,0 +1,10 @@
+#Binaries
+GeoIP.API/bin/*
+GeoIP.API/obj/*
+GeoIP.CORE/bin/*
+GeoIP.CORE/obj/*
+GeoIP.DbUpdater/bin/*
+GeoIP.DbUpdater/obj/*
+
+#IDE
+.vs

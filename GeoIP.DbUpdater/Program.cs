@@ -1,14 +1,18 @@
-﻿using GeoIP.CORE.Models;
+﻿using GeoIP.CORE.Helpers;
+using GeoIP.CORE.Models;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
 using dapper = GeoIP.CORE.Repositories.Dapper;
 
 namespace GeoIP.DbUpdater
 {
     class Program
     {
-
 
         static void Main(string[] args)
         {
@@ -20,10 +24,13 @@ namespace GeoIP.DbUpdater
 
             var geoDb = new dapper.GeoInfoRepository(configuration.GetConnectionString("GeoDb"));
 
-            var geoInfo = new GeoInfo { Ip = "123.223.223.1", Latitude = 25.9988448, Longitude = 45.8383800 };
+            string url = configuration["ArchiveUrl"];
 
-            geoDb.Insert(geoInfo).GetAwaiter().GetResult();
+            var urls = HtmlParser.GetDowloadUrls(url).GetAwaiter().GetResult();
 
+            var geoInfo = FileHelper.UnzipFile(urls[0]).GetAwaiter().GetResult().Split("\n");
+          
+            geoDb.InsertMany(SqlHelper.GetManyInsertQuery(ref geoInfo)).GetAwaiter().GetResult();
 
         }
     }

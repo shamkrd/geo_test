@@ -105,5 +105,20 @@ namespace GeoIP.CORE.Repositories.Dapper
                 }
             }
         }
+
+        public async Task InsertMany(string sql)
+        {
+            using (IDbConnection db = new NpgsqlConnection(connectionString))
+            {
+                try
+                {
+                    await db.ExecuteAsync(sql);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Во время выполнения sql запроса произошла ошибка", ex);
+                }
+            }
+        }
     }
 }

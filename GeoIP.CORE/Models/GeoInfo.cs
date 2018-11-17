@@ -6,6 +6,7 @@ namespace GeoIP.CORE.Models
     /// <summary>
     /// Информация о геолокации
     /// </summary>
+    [Table("geo_infos")]
     public class GeoInfo
     {
         #region Properties
@@ -17,7 +18,7 @@ namespace GeoIP.CORE.Models
         /// IP адрес
         /// </summary>
         [Column("ip")]
-        [JsonProperty("ip")]
+        [JsonIgnore]
         public string Ip { get; set; }
 
         /// <summary>

@@ -9,11 +9,17 @@ namespace GeoIP.CORE.Helpers
 {
    public class FileHelper
     {
+        /// <summary>
+        /// Разорхивирует архив по url адресу
+        /// </summary>
+        /// <param name="url">Адрес архива</param>
+        /// <returns></returns>
         public async static Task<string> UnzipFile (string url)
         {
             var resp = await RequestHelper.SendRequest(url);
                 using (var archive = new ZipArchive(resp))
                 {
+                    //Проверяем что файл в апхиаве, содержит IPv4 адреса 
                     var entry = archive.Entries.FirstOrDefault(x=>x.FullName.Contains("IPv4"));
 
                     if (entry != null)

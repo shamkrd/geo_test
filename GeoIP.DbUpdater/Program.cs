@@ -1,13 +1,14 @@
 ﻿using GeoIP.CORE.Helpers;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Threading.Tasks;
 using dapper = GeoIP.CORE.Repositories.Dapper;
 
 namespace GeoIP.DbUpdater
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -19,11 +20,11 @@ namespace GeoIP.DbUpdater
 
             string url = configuration["ArchiveUrl"];
 
-            var urls = HtmlParser.GetDowloadUrls(url).GetAwaiter().GetResult();
+            var urls = await HtmlParser.GetDowloadUrls(url);
 
-            var geoInfo = FileHelper.UnzipFile(urls[0]).GetAwaiter().GetResult().Split("\n");
+            var geoInfo = (await FileHelper.UnzipFile(urls[0])).Split("\n");
           
-            geoDb.InsertMany(SqlHelper.GetManyInsertQuery(ref geoInfo)).GetAwaiter().GetResult();
+            await geoDb.InsertMany(SqlHelper.GetManyInsertQuery(ref geoInfo));
 
         }
     }
